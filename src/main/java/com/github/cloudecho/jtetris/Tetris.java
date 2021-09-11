@@ -91,6 +91,7 @@ public class Tetris implements Runnable {
         this.init();
         this.state = STATE_RUNNING;
         this.notify();
+        gui.stateChanged(this.state);
     }
 
     private void drift() {
