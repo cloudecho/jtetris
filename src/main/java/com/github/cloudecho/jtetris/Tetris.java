@@ -73,8 +73,8 @@ public class Tetris implements Runnable {
             System.out.printf("could not pause as current state is %d\n", state);
             return;
         }
-        this.state = STATE_PAUSED;
-        gui.stateChanged(this.state);
+
+        this.changeState( STATE_PAUSED);
     }
 
     synchronized void resume() {
@@ -82,16 +82,14 @@ public class Tetris implements Runnable {
             System.out.printf("could not resume as current state is %d\n", state);
             return;
         }
-        this.state = STATE_RUNNING;
+        this.changeState(STATE_RUNNING);
         this.notify();
-        gui.stateChanged(this.state);
     }
 
     synchronized void restart() {
         this.init();
-        this.state = STATE_RUNNING;
+        this.changeState(STATE_RUNNING);
         this.notify();
-        gui.stateChanged(this.state);
     }
 
     private void drift() {
@@ -222,8 +220,12 @@ public class Tetris implements Runnable {
     }
 
     private void gameOver() {
-        this.state = STATE_OVER;
-        gui.stateChanged(this.state);
+        this.changeState(STATE_OVER);
+    }
+
+    private void changeState(int state){
+        this.state = state;
+        gui.stateChanged(state);
     }
 
     private void updateLevel() {
