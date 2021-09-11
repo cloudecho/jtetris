@@ -87,15 +87,14 @@ class Gui extends JFrame {
         box.add(Box.createHorizontalStrut(twoButtons.getPreferredSize().width + UNIT_SIZE));
 
         box.add(mpanels[1]);
-        box.add(Box.createVerticalStrut(3 * UNIT_SIZE));
+        box.add(Box.createVerticalStrut(5 * UNIT_SIZE));
 
         box.add(labels[0]);
         box.add(this.labelValues[0]);
-        box.add(Box.createVerticalStrut(UNIT_SIZE));
+        box.add(Box.createVerticalStrut(UNIT_SIZE / 2));
 
         box.add(labels[1]);
         box.add(this.labelValues[1]);
-        box.add(Box.createVerticalStrut(UNIT_SIZE));
 
         // four moving buttons
         Panel grid = new Panel();
