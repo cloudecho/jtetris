@@ -1,8 +1,8 @@
-# Introduction
+## Introduction
 
 A Tetris game written in Java.
 
-# Build
+## Build
 
 Package: 
 
@@ -16,3 +16,6 @@ Run:
 java -jar target/jtetris-*-jar-with-dependencies.jar 
 ```
 
+## Snapshot
+
+[A snapshot](./jtetris-snapshot.png)
