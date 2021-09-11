@@ -16,6 +16,6 @@ Run:
 java -jar target/jtetris-*-jar-with-dependencies.jar 
 ```
 
-## Snapshot
+## Screenshot
 
-[A snapshot](./jtetris-snapshot.png)
+[A snapshot](./jtetris-screenshot.png)
