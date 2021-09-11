@@ -318,7 +318,7 @@ class Gui extends JFrame {
                 if (!component.isFocusOwner()) {
                     component.requestFocusInWindow();
                 }
-                Tetris.sleep(20);
+                Tetris.sleep(200);
             }
         }
     }
