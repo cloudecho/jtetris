@@ -95,27 +95,18 @@ public class Tetris implements Runnable {
     }
 
     private void drift() {
-        int len = ROW - this.rowBegin;
-        boolean[] bCol = new boolean[len];
-
-        for (int i = 0; i < len; ++i) {
-            bCol[i] = this.model[i + this.rowBegin][0];
-        }
-
-        for (int j = 0; j < COL - 1; ++j) {
+        for (int j = 0; j < COL; ++j) {
             for (int i = this.rowBegin; i < ROW; ++i) {
-                this.model[i][j] = this.model[i][j + 1];
+                int k = j + 1;
+                if (k > COL - 1) {
+                    k = 0;
+                }
+                this.model[i][j] = this.model[i][k];
             }
 
             gui.flushColor(this.model, rowBegin, ROW - 1);
             Tetris.sleep(4);
         }
-
-        for (int i = 0; i < len; ++i) {
-            this.model[i + this.rowBegin][COL - 1] = bCol[i];
-        }
-
-        gui.flushColor(this.model, rowBegin, ROW - 1);
     }
 
     private synchronized void randomDrift(double probability) {
