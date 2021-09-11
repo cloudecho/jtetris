@@ -239,6 +239,7 @@ public class Tetris implements Runnable {
         final int newLevel = this.lines / ROW;
         if (newLevel > this.level && newLevel < SPEEDS.length) {
             this.level = newLevel;
+            this.speed = SPEEDS[newLevel];
             this.gui.levelChanged(this.level);
         }
     }
