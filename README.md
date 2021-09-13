@@ -18,4 +18,4 @@ java -jar target/jtetris-*-jar-with-dependencies.jar
 
 ## Screenshot
 
-[A snapshot](./jtetris-screenshot.png)
+![A snapshot](./jtetris-screenshot.png)
