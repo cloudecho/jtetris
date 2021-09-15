@@ -69,7 +69,7 @@ class Shape {
             new boolean[][]{ // 15
                     {_1, _1},
                     {_1, _1}},
-            new boolean[][]{// 16-19
+            new boolean[][]{ // 16-19
                     {_0, _1, _0},
                     {_1, _1, _1}},
             new boolean[][]{
@@ -110,7 +110,56 @@ class Shape {
                     {_1, _0}},
             new boolean[][]{
                     {_1, _0, _0},
-                    {_1, _1, _1}}};
+                    {_1, _1, _1}},
+            new boolean[][]{ // 28-29
+                    {_1, _0},
+                    {_0, _1}},
+            new boolean[][]{
+                    {_0, _1},
+                    {_1, _0}},
+            new boolean[][]{ // 30-33
+                    {_0, _1, _0},
+                    {_1, _0, _1}},
+            new boolean[][]{
+                    {_0, _1},
+                    {_1, _0},
+                    {_0, _1}},
+            new boolean[][]{
+                    {_1, _0, _1},
+                    {_0, _1, _0}},
+            new boolean[][]{
+                    {_1, _0},
+                    {_0, _1},
+                    {_1, _0}},
+            new boolean[][]{ // 34-37
+                    {_0, _0, _1},
+                    {_1, _1, _0}},
+            new boolean[][]{
+                    {_1, _0},
+                    {_0, _1},
+                    {_0, _1}},
+            new boolean[][]{
+                    {_0, _1, _1},
+                    {_1, _0, _0}},
+            new boolean[][]{
+                    {_1, _0},
+                    {_1, _0},
+                    {_0, _1}},
+            new boolean[][]{ // 38-41
+                    {_0, _1},
+                    {_0, _1},
+                    {_1, _0}},
+            new boolean[][]{
+                    {_1, _1, _0},
+                    {_0, _0, _1}},
+            new boolean[][]{
+                    {_0, _1},
+                    {_1, _0},
+                    {_1, _0}},
+            new boolean[][]{
+                    {_1, _0, _0},
+                    {_0, _1, _1}},
+    };
 
     public static final int SHAPE_NUM = SHAPES.length;
     public static final int RANK = 4;
@@ -205,6 +254,29 @@ class Shape {
             case 26:
             case 27:
                 id = this.id >= 27 ? 24 : this.id + 1;
+                break;
+            case 28:
+            case 29:
+                id = 57 - this.id;
+                break;
+            case 30:
+            case 31:
+            case 32:
+            case 33:
+                id = this.id == 33 ? 30 : this.id + 1;
+                break;
+            case 34:
+            case 35:
+            case 36:
+            case 37:
+                id = this.id == 37 ? 34 : this.id + 1;
+                break;
+            case 38:
+            case 39:
+            case 40:
+            case 41:
+                id = this.id == 41 ? 38 : this.id + 1;
+                break;
         }
 
         switch (this.id) {
@@ -214,13 +286,18 @@ class Shape {
             case 2:
             case 17:
             case 24:
+            case 24 + 14:
+            case 31:
                 ++xL;
                 break;
             case 3:
             case 13:
+            case 13 + 23:
             case 18:
             case 23:
             case 25:
+            case 25 + 14:
+            case 32:
                 --xL;
                 ++yL;
                 break;
@@ -233,6 +310,7 @@ class Shape {
             case 7:
             case 8:
             case 11:
+            case 34:
             case 15:
             case 16:
             case 20:
@@ -240,19 +318,23 @@ class Shape {
             default:
                 break;
             case 9:
-                xL -= 2;
+                --xL;
                 ++yL;
                 break;
             case 10:
-                xL += 2;
+                ++xL;
                 --yL;
                 break;
             case 12:
+            case 12 + 23:
                 ++xL;
                 break;
             case 14:
+            case 14 + 23:
             case 19:
             case 26:
+            case 26 + 14:
+            case 33:
                 --yL;
         }
 
