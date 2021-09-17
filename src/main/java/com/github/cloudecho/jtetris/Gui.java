@@ -142,11 +142,11 @@ class Gui extends JFrame {
         this.drawShapeNext(nextShape, BG_COLOR);
     }
 
-    synchronized void showShape(Shape currShape) {
+    void showShape(Shape currShape) {
         this.drawShape(currShape, COLOR);
     }
 
-    synchronized void eraseShape(Shape currShape) {
+    void eraseShape(Shape currShape) {
         this.drawShape(currShape, BG_COLOR);
     }
 
@@ -176,7 +176,7 @@ class Gui extends JFrame {
         }
     }
 
-    synchronized void wink(int whichRow, int time) {
+    void wink(int whichRow, int time) {
         for (int k = 0; k < time; ++k) {
             for (int i = 0; i < Tetris.COL; ++i) {
                 this.matrix[whichRow][i].setBackground(BG_COLOR);

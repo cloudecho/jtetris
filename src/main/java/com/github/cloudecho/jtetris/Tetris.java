@@ -176,9 +176,12 @@ public class Tetris implements Runnable {
             }
 
             for (; this.rowBegin > 0; this.randomDrift(0.1d)) {
-                this.nextShape = new Shape(this.randIndex());
-                gui.showShapeNext(nextShape);
-                gui.showShape(currShape);
+                synchronized (this) {
+                    this.nextShape = new Shape(this.randIndex());
+                    gui.showShapeNext(nextShape);
+                    gui.showShape(currShape);
+                }
+
                 Tetris.sleep(this.speed);
 
                 while (this.shapeMove(Shape.DOWN)) {
@@ -197,11 +200,10 @@ public class Tetris implements Runnable {
                     Tetris.sleep(this.speed);
                 }
 
-                if (this.rowBegin > this.currShape.x) {
-                    this.rowBegin = this.currShape.x;
-                }
-
                 synchronized (this) {
+                    if (this.rowBegin > this.currShape.x) {
+                        this.rowBegin = this.currShape.x;
+                    }
                     this.updateModel();
                     this.lines += this.addScore();
                     this.gui.scoreChanged(this.score);
@@ -219,7 +221,7 @@ public class Tetris implements Runnable {
         return STATE_PAUSED == state;
     }
 
-    private void gameOver() {
+    private synchronized void gameOver() {
         this.changeState(STATE_OVER);
     }
 
