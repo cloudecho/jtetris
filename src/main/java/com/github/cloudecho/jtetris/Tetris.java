@@ -75,7 +75,7 @@ public class Tetris implements Runnable {
             return;
         }
 
-        this.changeState( STATE_PAUSED);
+        this.changeState(STATE_PAUSED);
     }
 
     synchronized void resume() {
@@ -94,18 +94,26 @@ public class Tetris implements Runnable {
     }
 
     private void drift() {
-        for (int j = 0; j < COL; ++j) {
-            for (int i = this.rowBegin; i < ROW; ++i) {
-                int k = j + 1;
-                if (k > COL - 1) {
-                    k = 0;
-                }
-                this.model[i][j] = this.model[i][k];
-            }
-
-            gui.flushColor(this.model, rowBegin, ROW - 1);
-            Tetris.sleep(4);
+        // copy 0-th column
+        boolean[] col0 = new boolean[ROW - this.rowBegin];
+        for (int i = this.rowBegin; i < ROW; ++i) {
+            col0[i - this.rowBegin] = this.model[i][0];
         }
+
+        // shift 0~COL-1 columns
+        for (int j = 0; j < COL - 1; ++j) {
+            for (int i = this.rowBegin; i < ROW; ++i) {
+                this.model[i][j] = this.model[i][j + 1];
+            }
+            gui.flushColor(this.model, rowBegin, ROW - 1);
+            Tetris.sleep(100 / COL);
+        }
+
+        // shift the last column
+        for (int i = this.rowBegin; i < ROW; ++i) {
+            this.model[i][COL - 1] = col0[i - this.rowBegin];
+        }
+        gui.flushColor(this.model, rowBegin, ROW - 1);
     }
 
     private synchronized void randomDrift(double probability) {
@@ -226,7 +234,7 @@ public class Tetris implements Runnable {
         this.changeState(STATE_OVER);
     }
 
-    private void changeState(int state){
+    private void changeState(int state) {
         this.state = state;
         gui.stateChanged(state);
     }
