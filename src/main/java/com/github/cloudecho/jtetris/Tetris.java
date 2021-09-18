@@ -42,6 +42,7 @@ public class Tetris implements Runnable {
         this.rowBegin = ROW - 1;
         this.score = 0;
         this.lines = 0;
+        this.level = 0;
     }
 
     void rotate() {
