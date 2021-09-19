@@ -183,6 +183,14 @@ class Shape {
         return Colors.colorOf(this.colorId);
     }
 
+    public static Shape randomShape(){
+        return new Shape(randomIndex());
+    }
+
+    private static int randomIndex() {
+        return (int) Math.floor(SHAPE_NUM * Math.random());
+    }
+
     /**
      * Compute x2,y2
      */

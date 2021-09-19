@@ -21,7 +21,7 @@ public class Tetris implements Runnable {
     private int rowBegin;
 
     private volatile int state = STATE_RUNNING;
-    private Shape currShape = new Shape(this.randIndex());
+    private Shape currShape = Shape.randomShape();
     private Shape nextShape;
     private final Gui gui = new Gui(this);
 
@@ -167,10 +167,6 @@ public class Tetris implements Runnable {
         }
     }
 
-    private int randIndex() {
-        return (int) Math.floor((double) Shape.SHAPE_NUM * Math.random());
-    }
-
     public void run() {
         while (true) {
             synchronized (this) {
@@ -186,7 +182,7 @@ public class Tetris implements Runnable {
 
             for (; this.rowBegin > 0; this.randomDrift(0.1d)) {
                 synchronized (this) {
-                    this.nextShape = new Shape(this.randIndex());
+                    this.nextShape = Shape.randomShape();
                     gui.showShapeNext(nextShape);
                     gui.showShape(currShape);
                 }
