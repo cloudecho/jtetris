@@ -10,11 +10,8 @@ import java.awt.event.KeyEvent;
 class Gui extends JFrame {
     private static final long serialVersionUID = 1L;
     public static final int UNIT_SIZE = 32;
-    public static final Color COLOR = new Color(180, 204, 255);
-    public static final Color BG_COLOR = new Color(0xe7, 0xe7, 0xe7);
-    public static final Color WK_COLOR = Color.GREEN;
     public static final Font FONT = new Font(Font.MONOSPACED, Font.PLAIN, UNIT_SIZE / 2);
-    public static final Font FONT2 = new Font(Font.MONOSPACED, Font.PLAIN, 2 * UNIT_SIZE / 3);
+    public static final Font FONT2 = new Font(Font.MONOSPACED, Font.PLAIN, 4 * UNIT_SIZE / 5);
 
     private Label[][] matrix;
     private Label[][] matrixNext;
@@ -125,7 +122,7 @@ class Gui extends JFrame {
     void reset() {
         for (int i = 0; i < Tetris.ROW; ++i) {
             for (int j = 0; j < Tetris.COL; ++j) {
-                this.matrix[i][j].setBackground(BG_COLOR);
+                this.matrix[i][j].setBackground(Colors.BG_COLOR);
             }
         }
 
@@ -135,19 +132,19 @@ class Gui extends JFrame {
     }
 
     void showShapeNext(Shape nextShape) {
-        this.drawShapeNext(nextShape, COLOR);
+        this.drawShapeNext(nextShape, nextShape.color());
     }
 
     void eraseShapeNext(Shape nextShape) {
-        this.drawShapeNext(nextShape, BG_COLOR);
+        this.drawShapeNext(nextShape, Colors.BG_COLOR);
     }
 
     void showShape(Shape currShape) {
-        this.drawShape(currShape, COLOR);
+        this.drawShape(currShape, currShape.color());
     }
 
     void eraseShape(Shape currShape) {
-        this.drawShape(currShape, BG_COLOR);
+        this.drawShape(currShape, Colors.BG_COLOR);
     }
 
     private void drawShape(Shape currShape, Color color) {
@@ -179,21 +176,21 @@ class Gui extends JFrame {
     void wink(int whichRow, int time) {
         for (int k = 0; k < time; ++k) {
             for (int i = 0; i < Tetris.COL; ++i) {
-                this.matrix[whichRow][i].setBackground(BG_COLOR);
+                this.matrix[whichRow][i].setBackground(Colors.BG_COLOR);
             }
             Tetris.sleep(100);
 
             for (int i = 0; i < Tetris.COL; ++i) {
-                this.matrix[whichRow][i].setBackground(WK_COLOR);
+                this.matrix[whichRow][i].setBackground(Colors.WK_COLOR);
             }
             Tetris.sleep(100);
         }
     }
 
-    void flushColor(boolean[][] model, int rowBegin, int rowEnd) {
+    void flushColor(byte[][] model, int rowBegin, int rowEnd) {
         for (int i = rowBegin; i <= rowEnd; ++i) {
             for (int j = 0; j < Tetris.COL; ++j) {
-                this.matrix[i][j].setBackground(model[i][j] ? COLOR : BG_COLOR);
+                this.matrix[i][j].setBackground(Colors.colorOf(model[i][j]));
             }
         }
     }

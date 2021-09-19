@@ -10,7 +10,7 @@ import javax.swing.JPanel;
  */
 class MPanel extends JPanel {
     private static final long serialVersionUID = 1L;
-    public static final Color DEFAULT_COLOR = Gui.BG_COLOR;
+    public static final Color DEFAULT_COLOR = Colors.BG_COLOR;
     public static final Dimension DEFAULT_SIZE = new Dimension(Gui.UNIT_SIZE, Gui.UNIT_SIZE);
     public Label[][] matrix;
     private final int row;

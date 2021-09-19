@@ -1,11 +1,14 @@
 
 package com.github.cloudecho.jtetris;
 
+import java.awt.*;
+
 /**
  * Shape with position
  */
 class Shape {
     private final int id;
+    public final byte colorId;
     public int x; // top
     public int y; // left
     public int x2; // top + height
@@ -165,17 +168,19 @@ class Shape {
     public static final int RANK = 4;
 
     public Shape(int id) {
+        this(id, Colors.randomId(), 0, Tetris.COL / 2 - 1);
+    }
+
+    public Shape(int id, byte colorId, int x, int y) {
         this.id = id;
-        this.x = 0; // top
-        this.y = Tetris.COL / 2 - 1; // left
+        this.colorId = colorId;
+        this.x = x; // top
+        this.y = y; // left
         this.computeXY2();
     }
 
-    public Shape(int id, int x, int y) {
-        this.id = id;
-        this.x = x;
-        this.y = y;
-        this.computeXY2();
+    public Color color() {
+        return Colors.colorOf(this.colorId);
     }
 
     /**
@@ -338,7 +343,7 @@ class Shape {
                 --yL;
         }
 
-        return new Shape(id, xL, yL);
+        return new Shape(id, this.colorId, xL, yL);
     }
 
     public Shape tryMove(int direction) {
@@ -360,6 +365,6 @@ class Shape {
                 ++yL;
         }
 
-        return new Shape(id, xL, yL);
+        return new Shape(id, this.colorId, xL, yL);
     }
 }

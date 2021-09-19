@@ -13,7 +13,7 @@ public class Tetris implements Runnable {
     static final int STATE_RUNNING = 2;
     static final int STATE_PAUSED = 3;
 
-    private final boolean[][] model = new boolean[ROW][COL];
+    private final byte[][] model = new byte[ROW][COL];
     private int level; // start from 0
     private int lines;
     private int score;
@@ -34,7 +34,7 @@ public class Tetris implements Runnable {
     private void init() {
         for (int i = 0; i < ROW; ++i) {
             for (int j = 0; j < COL; ++j) {
-                this.model[i][j] = false;
+                this.model[i][j] = 0;
             }
         }
 
@@ -95,7 +95,7 @@ public class Tetris implements Runnable {
 
     private void drift() {
         // copy 0-th column
-        boolean[] col0 = new boolean[ROW - this.rowBegin];
+        byte[] col0 = new byte[ROW - this.rowBegin];
         for (int i = this.rowBegin; i < ROW; ++i) {
             col0[i - this.rowBegin] = this.model[i][0];
         }
@@ -144,7 +144,7 @@ public class Tetris implements Runnable {
 
             for (int i = shape.x; i <= shape.x2; ++i) {
                 for (int j = shape.y; j <= shape.y2; ++j) {
-                    if (oShape[i - shape.x][j - shape.y] && this.model[i][j]) {
+                    if (oShape[i - shape.x][j - shape.y] && this.model[i][j] > 0) {
                         return false;
                     }
                 }
@@ -156,12 +156,12 @@ public class Tetris implements Runnable {
     }
 
     private synchronized void updateModel() {
-        boolean[][] shape = this.currShape.getShape();
+        boolean[][] oShape = this.currShape.getShape();
 
         for (int i = this.currShape.x; i <= this.currShape.x2; ++i) {
             for (int j = this.currShape.y; j <= this.currShape.y2; ++j) {
-                if (shape[i - this.currShape.x][j - this.currShape.y]) {
-                    this.model[i][j] = shape[i - this.currShape.x][j - this.currShape.y];
+                if (oShape[i - this.currShape.x][j - this.currShape.y]) {
+                    this.model[i][j] = this.currShape.colorId;
                 }
             }
         }
@@ -276,7 +276,7 @@ public class Tetris implements Runnable {
             boolean bAdd = true;
 
             for (int j = 0; j < COL; ++j) {
-                if (!this.model[i][j]) {
+                if (0 == this.model[i][j]) {
                     bAdd = false;
                     break;
                 }
@@ -302,7 +302,7 @@ public class Tetris implements Runnable {
         }
 
         for (int j = 0; j < COL; ++j) {
-            this.model[this.rowBegin][j] = false;
+            this.model[this.rowBegin][j] = 0;
         }
 
         gui.flushColor(this.model, rowBegin, rowEnd);
