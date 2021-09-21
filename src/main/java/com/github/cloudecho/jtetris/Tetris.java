@@ -2,6 +2,8 @@
 
 package com.github.cloudecho.jtetris;
 
+import javax.swing.*;
+
 public class Tetris implements Runnable {
     public static final int ROW = 19;
     public static final int COL = 11;
@@ -307,6 +309,12 @@ public class Tetris implements Runnable {
 
     public static void main(String[] args) {
         System.out.printf("SHAPE_NUM: %d\n", Shape.SHAPE_NUM);
+
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Tetris dg = new Tetris();
         new Thread(dg).start();
