@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 class Gui extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -13,8 +15,8 @@ class Gui extends JFrame {
     public static final Font FONT = new Font(Font.MONOSPACED, Font.PLAIN, UNIT_SIZE / 2);
     public static final Font FONT2 = new Font(Font.MONOSPACED, Font.PLAIN, 4 * UNIT_SIZE / 5);
 
-    private Label[][] matrix;
-    private Label[][] matrixNext;
+    private MPanel matrix;
+    private MPanel matrixNext;
 
     private JComponent main;
 
@@ -41,8 +43,8 @@ class Gui extends JFrame {
         JLabel[] labels = new JLabel[]{new JLabel("SCORE"), new JLabel("LEVEL")};
         MPanel[] mpanels = new MPanel[]{new MPanel(Tetris.ROW, Tetris.COL), new MPanel(Shape.RANK, Shape.RANK)};
 
-        this.matrix = mpanels[0].matrix;
-        this.matrixNext = mpanels[1].matrix;
+        this.matrix = mpanels[0];
+        this.matrixNext = mpanels[1];
 
         for (int i = 0; i < this.labelValues.length; ++i) {
             this.labelValues[i] = new JLabel("0");
@@ -64,65 +66,61 @@ class Gui extends JFrame {
             label.setAlignmentY(JLabel.CENTER_ALIGNMENT);
         }
 
-        this.labelState.setFont(FONT2);
+        this.labelState.setFont(FONT);
         this.labelState.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         this.labelState.setAlignmentY(JLabel.CENTER_ALIGNMENT);
 
         main = Box.createHorizontalBox();
         this.getContentPane().add(main);
 
-        Box box = Box.createVerticalBox();
-        main.add(mpanels[0]);
-        main.add(box);
-
         Box twoButtons = Box.createHorizontalBox();
-        box.add(twoButtons);
-
         twoButtons.add(this.btnMusic);
         twoButtons.add(Box.createHorizontalStrut(UNIT_SIZE / 2));
         twoButtons.add(this.btnPause);
-        box.add(Box.createHorizontalStrut(twoButtons.getPreferredSize().width + UNIT_SIZE));
 
-        box.add(mpanels[1]);
-        box.add(Box.createVerticalStrut(5 * UNIT_SIZE));
-
-        box.add(labels[0]);
-        box.add(this.labelValues[0]);
-        box.add(Box.createVerticalStrut(UNIT_SIZE / 2));
-
-        box.add(labels[1]);
-        box.add(this.labelValues[1]);
-
-        // four moving buttons
         Panel grid = new Panel();
-        box.add(grid);
+        main.add(mpanels[0]);
+        main.add(grid);
 
         grid.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
+        int gridy = 0;
 
-        c.gridx = 1;
-        c.gridy = 0;
-        grid.add(btnRotate, c);
+        c.gridwidth = 5;
+        addTo(grid, c, 0, gridy++, twoButtons);
+        addTo(grid, c, 0, gridy++, Box.createHorizontalStrut(twoButtons.getPreferredSize().width + UNIT_SIZE));
+        addTo(grid, c, 0, gridy++, Box.createVerticalStrut(3));
+        addTo(grid, c, 0, gridy++, mpanels[1]);
+        addTo(grid, c, 0, gridy++, Box.createVerticalStrut(5 * UNIT_SIZE));
+        addTo(grid, c, 0, gridy++, labels[0]);
+        addTo(grid, c, 0, gridy++, this.labelValues[0]);
+        addTo(grid, c, 0, gridy++, Box.createVerticalStrut(UNIT_SIZE / 2));
+        addTo(grid, c, 0, gridy++, labels[1]);
+        addTo(grid, c, 0, gridy++, this.labelValues[1]);
+        addTo(grid, c, 0, gridy++, Box.createVerticalStrut(UNIT_SIZE));
 
-        c.gridx = 0;
-        c.gridy = 1;
-        grid.add(btnLeft, c);
+        c.gridwidth = 1;
+        addTo(grid, c, 2, gridy++, btnRotate);
+        addTo(grid, c, 0, gridy, Box.createHorizontalStrut(btnRotate.getPreferredSize().width));
+        addTo(grid, c, 1, gridy, btnLeft);
+        addTo(grid, c, 3, gridy++, btnRight);
+        addTo(grid, c, 2, gridy++, btnDown);
 
-        c.gridx = 2;
-        c.gridy = 1;
-        grid.add(btnRight, c);
+        c.gridwidth = 5;
+        addTo(grid, c, 0, gridy++, Box.createVerticalStrut(UNIT_SIZE / 2));
+        addTo(grid, c, 0, gridy++, labelState);
+    }
 
-        c.gridx = 1;
-        c.gridy = 2;
-        grid.add(btnDown, c);
-
-        box.add(this.labelState);
+    private void addTo(Panel grid, GridBagConstraints c, int gridx, int gridy, Component comp) {
+        c.gridx = gridx;
+        c.gridy = gridy;
+        grid.add(comp, c);
     }
 
     void reset() {
         for (int i = 0; i < Tetris.ROW; ++i) {
             for (int j = 0; j < Tetris.COL; ++j) {
-                this.matrix[i][j].setBackground(Colors.BG_COLOR);
+                this.matrix.paint(i, j, Colors.BG_COLOR);
             }
         }
 
@@ -132,42 +130,54 @@ class Gui extends JFrame {
     }
 
     void showShapeNext(Shape nextShape) {
-        this.drawShapeNext(nextShape, nextShape.color());
+        showShapeNext(matrixNext.getGraphics(), nextShape);
+    }
+
+    void showShapeNext(Graphics g, Shape nextShape) {
+        this.drawShapeNext(g, nextShape, nextShape.color());
     }
 
     void eraseShapeNext(Shape nextShape) {
-        this.drawShapeNext(nextShape, Colors.BG_COLOR);
+        this.drawShapeNext(matrixNext.getGraphics(), nextShape, Colors.BG_COLOR);
     }
 
     void showShape(Shape currShape) {
-        this.drawShape(currShape, currShape.color());
+        showShape(matrix.getGraphics(), currShape);
+    }
+
+    void showShape(Graphics g, Shape currShape) {
+        this.drawShape(g, currShape, currShape.color());
     }
 
     void eraseShape(Shape currShape) {
-        this.drawShape(currShape, Colors.BG_COLOR);
+        eraseShape(matrix.getGraphics(), currShape);
     }
 
-    private void drawShape(Shape currShape, Color color) {
+    void eraseShape(Graphics g, Shape currShape) {
+        this.drawShape(g, currShape, Colors.BG_COLOR);
+    }
+
+    private void drawShape(Graphics g, Shape currShape, Color color) {
         boolean[][] shape = currShape.getShape();
 
         for (int i = currShape.x; i <= currShape.x2; ++i) {
             for (int j = currShape.y; j <= currShape.y2; ++j) {
                 if (shape[i - currShape.x][j - currShape.y]) {
-                    this.matrix[i][j].setBackground(color);
+                    this.matrix.paint(g, i, j, color);
                 }
             }
         }
 
     }
 
-    private void drawShapeNext(Shape nextShape, Color color) {
+    private void drawShapeNext(Graphics g, Shape nextShape, Color color) {
         boolean[][] shape = nextShape.getShape();
         int[] size = nextShape.getSize();
 
         for (int i = 0; i < size[0]; ++i) {
             for (int j = 0; j < size[1]; ++j) {
                 if (shape[i][j]) {
-                    this.matrixNext[i][j].setBackground(color);
+                    this.matrixNext.paint(g, i, j, color);
                 }
             }
         }
@@ -176,21 +186,25 @@ class Gui extends JFrame {
     void wink(int whichRow, int time) {
         for (int k = 0; k < time; ++k) {
             for (int i = 0; i < Tetris.COL; ++i) {
-                this.matrix[whichRow][i].setBackground(Colors.BG_COLOR);
+                this.matrix.paint(whichRow, i, Colors.BG_COLOR);
             }
             Tetris.sleep(100);
 
             for (int i = 0; i < Tetris.COL; ++i) {
-                this.matrix[whichRow][i].setBackground(Colors.WK_COLOR);
+                this.matrix.paint(whichRow, i, Colors.WK_COLOR);
             }
             Tetris.sleep(100);
         }
     }
 
     void flushColor(byte[][] model, int rowBegin, int rowEnd) {
+        flushColor(matrix.getGraphics(), model, rowBegin, rowEnd);
+    }
+
+    void flushColor(Graphics g, byte[][] model, int rowBegin, int rowEnd) {
         for (int i = rowBegin; i <= rowEnd; ++i) {
             for (int j = 0; j < Tetris.COL; ++j) {
-                this.matrix[i][j].setBackground(Colors.colorOf(model[i][j]));
+                this.matrix.paint(g, i, j, Colors.colorOf(model[i][j]));
             }
         }
     }
@@ -244,7 +258,7 @@ class Gui extends JFrame {
         this.labelValues[1].setText("" + level);
     }
 
-    private void addListeners(Tetris tetris) {
+    private void addListeners(final Tetris tetris) {
         JButton[] buttons = new JButton[]{this.btnRotate, this.btnLeft, this.btnRight};
         final int[] directions = new int[]{Shape.ROTATE, Shape.LEFT, Shape.RIGHT};
 
@@ -262,6 +276,26 @@ class Gui extends JFrame {
         this.btnPause.addActionListener((actionEvent) -> actionPrr(tetris));
 
         this.btnMusic.addActionListener((actionEvent) -> music());
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                tetris.windowOpened();
+            }
+        });
+
+        this.matrix.addComponentPaintListener((g) -> {
+            if (tetris.currShape != null) {
+                showShape(g, tetris.currShape);
+                flushColor(g, tetris.model, tetris.rowBegin, Tetris.ROW - 1);
+            }
+        });
+
+        this.matrixNext.addComponentPaintListener((g) -> {
+            if (tetris.nextShape != null) {
+                showShapeNext(g, tetris.nextShape);
+            }
+        });
 
         this.main.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent keyEvent) {

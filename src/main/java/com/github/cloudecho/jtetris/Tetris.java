@@ -3,6 +3,7 @@
 package com.github.cloudecho.jtetris;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Tetris implements Runnable {
     public static final int ROW = 19;
@@ -11,20 +12,21 @@ public class Tetris implements Runnable {
     private static final int[] SCORES = new int[]{100, 300, 500, 700};
     private static final int[] SPEEDS = new int[]{1200, 1000, 800, 500, 300, 200};
 
+    static final int STATE_ZERO = 0;
     static final int STATE_OVER = 1;
     static final int STATE_RUNNING = 2;
     static final int STATE_PAUSED = 3;
 
-    private final byte[][] model = new byte[ROW][COL];
+    final byte[][] model = new byte[ROW][COL];
     private int level; // start from 0
     private int lines;
     private int score;
     private int speed;
-    private int rowBegin;
+    int rowBegin;
 
-    private volatile int state = STATE_RUNNING;
-    private Shape currShape = Shape.randomShape();
-    private Shape nextShape;
+    private volatile int state = STATE_ZERO;
+    Shape currShape = Shape.randomShape();
+    Shape nextShape;
     private final Gui gui = new Gui(this);
 
     public Tetris() {
@@ -45,6 +47,12 @@ public class Tetris implements Runnable {
         this.score = 0;
         this.lines = 0;
         this.level = 0;
+    }
+
+    synchronized void windowOpened(){
+        System.out.println("window opened");
+        this.state = STATE_RUNNING;
+        this.notify();
     }
 
     void rotate() {
@@ -316,7 +324,7 @@ public class Tetris implements Runnable {
             e.printStackTrace();
         }
 
-        Tetris dg = new Tetris();
-        new Thread(dg).start();
+        Tetris t = new Tetris();
+        new Thread(t).start();
     }
 }
