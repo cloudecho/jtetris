@@ -3,7 +3,6 @@
 package com.github.cloudecho.jtetris;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Tetris implements Runnable {
     public static final int ROW = 19;
@@ -31,8 +30,14 @@ public class Tetris implements Runnable {
 
     public Tetris() {
         this.init();
-        this.gui.pack();
-        this.gui.setVisible(true);
+    }
+
+    void start() {
+        SwingUtilities.invokeLater(() -> {
+            this.gui.pack();
+            this.gui.setVisible(true);
+            new Thread(this).start();
+        });
     }
 
     private void init() {
@@ -49,7 +54,7 @@ public class Tetris implements Runnable {
         this.level = 0;
     }
 
-    synchronized void windowOpened(){
+    synchronized void windowOpened() {
         System.out.println("window opened");
         this.state = STATE_RUNNING;
         this.notify();
@@ -318,13 +323,14 @@ public class Tetris implements Runnable {
     public static void main(String[] args) {
         System.out.printf("SHAPE_NUM: %d\n", Shape.SHAPE_NUM);
 
-        try {
-            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 
-        Tetris t = new Tetris();
-        new Thread(t).start();
+        new Tetris().start();
     }
 }
